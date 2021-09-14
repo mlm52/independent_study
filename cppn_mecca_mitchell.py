@@ -90,13 +90,13 @@ def activation_type(matrix, kind):
 def run_cppn(sol):
     out=np.matmul(base_grid,sol[0:6].reshape((2,3))*2)
     out0=activation_type(out[:,:,0],sol[18])
-    out1=activation_type(out[:,:,0],sol[19])
-    out2=activation_type(out[:,:,0],sol[20])
+    out1=activation_type(out[:,:,1],sol[19])
+    out2=activation_type(out[:,:,2],sol[20])
     out = np.stack((out0,out1,out2),axis=2)
     out=np.matmul(out,sol[6:15].reshape((3,3))*2)
     out0=activation_type(out[:,:,0],sol[21])
-    out1=activation_type(out[:,:,0],sol[22])
-    out2=activation_type(out[:,:,0],sol[23])
+    out1=activation_type(out[:,:,1],sol[22])
+    out2=activation_type(out[:,:,2],sol[23])
     out = np.stack((out0,out1,out2),axis=2)
     out=np.matmul(out,sol[15:18].reshape((3,1))*2)
     return 1/(1 + np.exp(-out))
@@ -104,8 +104,7 @@ def run_cppn(sol):
 goal = run_cppn(np.random.rand(24)*2-1)
 
 def cppn_difference(sol):
-    """Styblinski-Tang function evaluation and BCs for a batch of solutions.
-
+    """
     Args:
         sol (np.ndarray): (batch_size, dim) array of solutions
     Returns:
@@ -327,6 +326,7 @@ def cppn_opt_main(algorithm,
     # Plot metrics.
     print(f"Algorithm Time (Excludes Logging and Setup): {non_logging_time}s")
     for metric in metrics:
+        plt.figure(figsize=(9,6))
         plt.plot(metrics[metric]["x"], metrics[metric]["y"])
         plt.title(metric)
         plt.xlabel("Iteration")
