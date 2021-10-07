@@ -273,7 +273,7 @@ def cppn_opt_main(algorithm,
     if not outdir.is_dir():
         outdir.mkdir()
 
-    plt.imshow(goal, cmap='Greys_r')
+    plt.imshow(goal, cmap='Greys_r',vmin=0,vmax=1)
     plt.savefig(str(outdir / "goal.png"))
 
     optimizer = create_optimizer(algorithm, dim, seed)
