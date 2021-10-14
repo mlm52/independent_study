@@ -93,7 +93,7 @@ r=np.sqrt(np.square(base_grid).sum(axis=2))
 base_grid=np.append(base_grid,np.expand_dims(r,2),axis=2)
 
 def activation_type(matrix, kind):
-    return matrix
+    return np.cos(matrix)
 
 def run_cppn(sol):
     h=np.matmul(base_grid,sol[0:12].reshape((3,4))*2)

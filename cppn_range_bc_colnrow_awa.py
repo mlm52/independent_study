@@ -93,6 +93,12 @@ r=np.sqrt(np.square(base_grid).sum(axis=2))
 base_grid=np.append(base_grid,np.expand_dims(r,2),axis=2)
 
 def activation_type(matrix, kind):
+    if kind<-0.5:
+        return np.sin(matrix)
+    elif kind<0.0:
+        return np.cos(matrix)
+    elif kind<.5:
+        return np.exp((np.square(matrix/2)/-2))/(2*(2*math.pi)**.5)
     return matrix
 
 def run_cppn(sol):
@@ -127,19 +133,23 @@ def cppn_difference(sol):
     # Normalize the objective to the range [0, 100] where 100 is optimal.
     best_obj = 0
     worst_obj = 64*64
+    index = np.expand_dims(np.arange(64),axis=1)
     for x in range(sol.shape[0]):
         temp_diff=np.square((goal-run_cppn(sol[x])))
+        temp_diff=np.where(temp_diff>.05,1,temp_diff)
         temp_r=temp_diff.sum(axis=0)
         temp_c=temp_diff.sum(axis=1)
+        max_c=np.max(temp_c)
+        max_r=np.max(temp_r)
         temp=temp_r.sum()
         if x==0:
             raw_obj = temp
-            row = np.argmin(temp_r)
-            col = np.argmin(temp_c)
+            row = (index*(max_r-temp_r)).sum()/(64*max_r-temp)
+            col = (index*(max_c-temp_c)).sum()/(64*max_c-temp)
         else:
             raw_obj = np.append(raw_obj, temp)
-            row = np.append(row,np.argmin(temp_r))
-            col = np.append(col,np.argmin(temp_c))
+            row = np.append(row,(index*(max_c-temp_c)).sum()/(64*max_c-temp))
+            col = np.append(col,(index*(max_c-temp_c)).sum()/(64*max_c-temp))
     objs = (raw_obj - worst_obj) / (best_obj - worst_obj) * 100
 
     # Calculate BCs.

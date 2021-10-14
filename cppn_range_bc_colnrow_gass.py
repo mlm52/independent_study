@@ -92,8 +92,8 @@ base_grid=np.stack((base_grid,base_grid.transpose()),axis=2)
 r=np.sqrt(np.square(base_grid).sum(axis=2))
 base_grid=np.append(base_grid,np.expand_dims(r,2),axis=2)
 
-def activation_type(matrix, kind):
-    return matrix
+def activation_type(matrix, kind):    
+    return np.exp((np.square(matrix/2)/-2))/(2*(2*math.pi)**.5)
 
 def run_cppn(sol):
     h=np.matmul(base_grid,sol[0:12].reshape((3,4))*2)
