@@ -136,19 +136,19 @@ def cppn_difference(sol):
     index = np.expand_dims(np.arange(64),axis=1)
     for x in range(sol.shape[0]):
         temp_diff=np.square((goal-run_cppn(sol[x])))
-        temp_diff=np.where(temp_diff>.05,1,temp_diff)
+        temp_diff=np.where(temp_diff>.1,1,temp_diff)
         temp_r=temp_diff.sum(axis=0)
         temp_c=temp_diff.sum(axis=1)
         max_c=np.max(temp_c)
         max_r=np.max(temp_r)
-        temp=temp_r.sum()
+        temp=temp_c.sum()
         if x==0:
             raw_obj = temp
             row = (index*(max_r-temp_r)).sum()/(64*max_r-temp)
             col = (index*(max_c-temp_c)).sum()/(64*max_c-temp)
         else:
             raw_obj = np.append(raw_obj, temp)
-            row = np.append(row,(index*(max_c-temp_c)).sum()/(64*max_c-temp))
+            row = np.append(row,(index*(max_r-temp_r)).sum()/(64*max_r-temp))
             col = np.append(col,(index*(max_c-temp_c)).sum()/(64*max_c-temp))
     objs = (raw_obj - worst_obj) / (best_obj - worst_obj) * 100
 
@@ -184,7 +184,7 @@ def create_optimizer(algorithm, dim, seed):
             "map_elites", "line_map_elites", "cma_me_imp", "cma_me_imp_mu",
             "cma_me_rd", "cma_me_rd_mu", "cma_me_opt", "cma_me_mixed"
     ]:
-        archive = GridArchive((64, 64), bounds, seed=seed)
+        archive = GridArchive((500, 500), bounds, seed=seed)
     elif algorithm in ["cvt_map_elites", "line_cvt_map_elites"]:
         archive = CVTArchive(10_000, bounds, samples=100_000, use_kd_tree=True)
     else:
