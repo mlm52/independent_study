@@ -50,11 +50,11 @@ enabled_default         = True
 enabled_mutate_rate     = 0.02
 
 [speciateElites]
-compatibility_threshold = 4.0
+compatibility_threshold = 9.0
 
 [DefaultStagnation]
 species_fitness_func = max
-max_stagnation       = 3000
+max_stagnation       = 10000
 
 [mapElites]
-survival_threshold = 0.4
+survival_threshold = 0.8
